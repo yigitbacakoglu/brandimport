@@ -140,6 +140,47 @@ ActiveAdmin.register Brand do
     end
   end
   
+  #### START - CSV IMPORTING ####
+  
+  action_item :only => :index do
+    link_to 'Upload CSV', :action => 'upload_csv'
+  end
+
+  collection_action :upload_csv do
+    render "admin/csv/upload_csv"
+  end
+
+  collection_action :import_csv, :method => :post do
+       require "csv_import"
+       brand_tags = YAML.load_file(Rails.root.join("config", "brand_tags.yml"))
+       csv_import = CSVImport.new(params[:dump][:file].tempfile,
+                                  model: ImportBrand,
+                                  identifiers: %w[id name folder],
+                                  nice_header: "name"
+       )
+       csv_import.define_default("user_id", 6)
+       csv_import.define_default("imported", true)
+       csv_import.define_default("tagline", "") # transient on Brand
+       csv_import.define_transform("tags") do |value, _|
+         brand_tags.select { |tag| value.to_s.include?(tag) }
+       end
+       to_cents = ->(value, _) { value ? value.to_i * 100 : value }
+       csv_import.define_transform("max_budget_cents", &to_cents)
+       csv_import.define_transform("prices_from_cents", &to_cents)
+       csv_import.define_transform("prices_to_cents", &to_cents)
+       csv_import.define_transform("email") { |value, row| value.blank? ? row["secondary_email"] : value }
+       to_bool = ->(value, _) { value =~ /yes/i ? true : (value =~ /no/i ? false : nil) }
+       csv_import.define_transform("interested_collaborations", &to_bool)
+       csv_import.define_transform("looking_for_space", &to_bool)
+       csv_import.define_transform("created_at") { |value, _| Time.zone.parse(value) rescue Time.zone.now }
+       csv_import.run
+       redirect_to :action => :index, :notice => "CSV imported successfully!"
+  end
+  
+  #### END - CSV IMPORTING ####
+  
+  
+  
   #controller do
   #  before_filter only: :update do
   #    params[:brand][:industry].delete_if(&:blank?) if params[:brand_profile] && params[:brand_profile][:industry]
