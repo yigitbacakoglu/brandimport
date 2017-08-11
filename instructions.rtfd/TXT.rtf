@@ -1,0 +1,41 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs24 \cf0 \
+Instructions\
+\
+Find the brand list here:\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 https://docs.google.com/spreadsheets/d/19WbMPcEWehGxr3yk3L3hLUZWuqVyQ7qYmq-QirTVB1Y/edit?usp=sharing\
+\
+\
+Each brand can have (not all do have)\
+\
+- a logo\
+- a background image\
+- several product images\
+\
+everything is stored on S3. There is one folder for each brand (folder name can be found in brand list column \'84folder\'93). These folders always have the same structure:\
+\
+(brand)\
+\'97 file: background.jpg (== background image)\
+\'97 folder: Logo -> might contain 1 file with logo\
+\'97 folder: Products -> might contain several pictures\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 {{\NeXTGraphic Bildschirmfoto 2017-08-07 um 23.31.44.png \width8700 \height3620
+}¬}\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 \
+\
+
+\b Steps:
+\b0 \
+1. Import CSV file and create brand record in database\
+2. Pull logo file from S3 folder based on folder name in brand list (column folder) and process it and create an attachments in the database\
+3. Pull background image from S3 and process it and create an attachments in the database\
+4. Pull product images  and process them and create attachments in the database}

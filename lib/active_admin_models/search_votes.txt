@@ -1,0 +1,35 @@
+ActiveAdmin.register Listing::Votable, as: "Votables" do
+  menu url: -> { admin_votes_path }
+  config.sort_order = 'updated_at_desc'
+
+#remove_filter :votable_type
+
+  #permit_params :user_id, :place, :formatted_address, :description, :url, :admin_comment, :state, :city_name, :tags, :attachments, :starts_at, :ends_at
+
+  index do
+    column :votable_id
+    column :votable_type
+    column :voter_id do |l| text_node user_link(l.user) end
+    column :voter_type
+    column :vote_flag
+    column :vote_scope
+    column :vote_weight
+    column :created_at
+    column :updated_at
+    actions
+  end
+
+  form html: {multipart: true} do |f|
+    f.inputs do
+      f.input :votable_type
+      f.input :voter_id, collection: user_collection
+      f.input :voter_type
+      f.input :vote_flag
+      f.input :vote_scope
+      f.input :vote_weight
+    end
+
+    f.actions
+  end
+
+end
