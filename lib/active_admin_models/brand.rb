@@ -152,8 +152,9 @@ ActiveAdmin.register Brand do
 
   collection_action :import_csv, :method => :post do
        require "csv_import"
+       tempfile = params[:dump][:file].tempfile
        brand_tags = YAML.load_file(Rails.root.join("config", "brand_tags.yml"))
-       csv_import = CSVImport.new(params[:dump][:file].tempfile,
+       csv_import = CSVImport.new(tempfile,
                                   model: ImportBrand,
                                   identifiers: %w[id name folder],
                                   nice_header: "name"
@@ -174,6 +175,11 @@ ActiveAdmin.register Brand do
        csv_import.define_transform("looking_for_space", &to_bool)
        csv_import.define_transform("created_at") { |value, _| Time.zone.parse(value) rescue Time.zone.now }
        csv_import.run
+        
+       if File::exists?(tempfile)
+         File::delete(tempfile)
+       end
+
        redirect_to :action => :index, :notice => "CSV imported successfully!"
   end
   
