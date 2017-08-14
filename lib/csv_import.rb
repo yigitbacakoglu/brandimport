@@ -3,7 +3,7 @@ class CSVImport
   attr_reader :path, :model, :identifiers, :csv_options
   attr_reader :defaults, :transformations, :nice_header
 
-  def initialize(path, model:, identifiers: %w[id], col_sep: ";", quote_char: '"', nice_header: nil)
+  def initialize(path, model:, identifiers: %w[id], col_sep: ";", :quote_char => "|", nice_header: nil)
     @path, @model = path, model
     @identifiers = identifiers
     @csv_options = { col_sep: col_sep, quote_char: quote_char, headers: true, skip_blanks: true }
