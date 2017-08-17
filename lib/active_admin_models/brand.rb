@@ -177,7 +177,9 @@ ActiveAdmin.register Brand do
        csv_import.run
         
        if File::exists?(tempfile)
-         File::delete(tempfile)
+         tempfile.close
+         tempfile.unlink
+         tempfile  = nil
        end
 
        redirect_to :action => :index, :notice => "CSV imported successfully!"
