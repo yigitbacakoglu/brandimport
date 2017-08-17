@@ -153,6 +153,7 @@ ActiveAdmin.register Brand do
   collection_action :import_csv, :method => :post do
        require "csv_import"
        tempfile = params[:dump][:file].tempfile
+       params[:dump][:file] = nil
        brand_tags = YAML.load_file(Rails.root.join("config", "brand_tags.yml"))
        csv_import = CSVImport.new(tempfile,
                                   model: ImportBrand,
