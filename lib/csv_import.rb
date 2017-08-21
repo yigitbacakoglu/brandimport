@@ -51,6 +51,7 @@ class CSVImport
   ensure
     out.flush
     out.close
+    File.delete(out.path) rescue ''
   end
 
   def run
